@@ -17,11 +17,25 @@
         </v-flex >
       </v-layout>
     </v-container>
+    <v-snackbar
+          :timeout="3000"
+          :bottom="true"
+          :right="true"
+          v-model="sb"
+        >
+          {{msg}}
+        </v-snackbar>
   </div>
 </template>
 
 <script>
 export default {
+  data () {
+    return {
+      sb: false,
+      msg: ''
+    }
+  },
   created () {
     var vm = this
     function enviar () {
@@ -33,6 +47,9 @@ export default {
             vm.inicio = false
             vm.sb = true
             vm.msg = res.msj
+            setTimeout(function () {
+              vm.$router.go(-1)
+            }, 2000)
           } else {
             vm.sb = true
             vm.msg = res.msj

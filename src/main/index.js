@@ -560,7 +560,8 @@ ipcMain.on('constancia_sexto_grado', (event, arg) => {
 ipcMain.on('constancia_estudio', (event, arg) => {
   console.log('no operativo')
   event.returnValue = {
-    err: true
+    err: true,
+    msj: 'En mantenimiento'
   }
 })
 
