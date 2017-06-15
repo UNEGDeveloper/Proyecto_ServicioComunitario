@@ -21,6 +21,7 @@
         v-bind:search="buscado"
         selected-key="_id"
         select-all
+        rows-per-page-text="Número de Filas"
       >
       <template slot="items" scope="props">
         <td>
@@ -249,7 +250,7 @@ export default {
     return {
       headers: [
         {
-          text: 'codigo',
+          text: 'Codigo',
           left: true,
           sortable: false,
           value: 'codigo'

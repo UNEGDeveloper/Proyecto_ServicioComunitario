@@ -24,6 +24,7 @@
         v-bind:search="buscado"
         select-all
         selected-key="_id"
+        rows-per-page-text="Número de Filas"
       >
       <template slot="items" scope="props">
         <td>

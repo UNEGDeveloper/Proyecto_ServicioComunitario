@@ -41,7 +41,7 @@
                 </v-list-tile>
               </v-list-item>
             </v-list-group>
-            <v-subheader v-else-if="item.header" v-text="item.header" />
+            <v-subheader class="white--text" v-else-if="item.header" v-text="item.header" />
             <v-divider v-else-if="item.divider" light />
             <v-list-item v-else>
               <v-list-tile ripple @click.native="cambiar('', item.ruta)">
@@ -58,8 +58,8 @@
     </v-navigation-drawer>
       <v-toolbar fixed>
         <v-toolbar-side-icon light @click.native.stop="nav4 = !nav4" class="hidden-lg-and-up"/>
-        <v-toolbar-title>{{tituloMenu}}</v-toolbar-title>
-          <v-menu bottom origin="top right" transition="v-scale-transition">
+        <v-toolbar-title class="white--text">{{tituloMenu}}</v-toolbar-title>
+          <v-menu bottom left transition="v-scale-transition">
            <v-btn light icon slot="activator">
              <v-icon>more_vert</v-icon>
            </v-btn>

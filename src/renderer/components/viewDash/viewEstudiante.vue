@@ -38,7 +38,7 @@
             @cancel="props.item.info.cedula = props.item.info._cedula || props.item.info.cedula"
             lazy
           >
-            <div class="text-md-right">
+            <div class="text-md-left">
             {{ props.item.info.cedula }}
            </div>
             <v-text-field
@@ -183,7 +183,7 @@
             ></v-text-field>
             <v-text-field
               slot="input"
-              label="Nombre Representante"
+              label="Nombres Representante"
               v-bind:value="props.item.representante.nombre"
               v-on:change="val => props.item.representante.nombre = val"
               single-line
@@ -191,7 +191,7 @@
             ></v-text-field>
             <v-text-field
               slot="input"
-              label="Apellido del Representante"
+              label="Apellidos del Representante"
               v-bind:value="props.item.representante.apellido"
               v-on:change ="val => props.item.representante.apellido = val"
               single-line
