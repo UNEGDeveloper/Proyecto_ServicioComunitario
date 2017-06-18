@@ -26,7 +26,7 @@
                 v-model="menu"
                 transition="v-scale-transition"
                 offset-y
-                :nudge-left="56"
+                :nudge-left="40"
               >
                 <v-text-field
                   slot="activator"

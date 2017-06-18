@@ -10,30 +10,22 @@
               <v-text-field v-model='Estudiante.ci' v-bind:rules="reglas" min="7" max="10" maxlength="10" counter label="Cedula del Estudiante" required />
               <v-text-field v-model='Estudiante.motivo' min="5" max="20" maxlength="20" counter label="Causa de Retiro" required />
               <v-text-field v-model='Estudiante.cod' min="4" max="20" maxlength="20" counter label="Codigo Estadistico" required />
-              <v-menu
-              lazy
-              :close-on-content-click="false"
-              v-model="menu"
-              transition="v-scale-transition"
-              offset-y
-              :nudge-left="56"
-              >
-              <v-text-field
-              slot="activator"
-              label="Fecha de Retiro"
-              v-model="Estudiante.date"
-              prepend-icon="event"
-              readonly
-              ></v-text-field>
-              <v-date-picker v-model="Estudiante.date" no-title scrollable actions>
-                <template scope="{ save, cancel }">
-                  <v-card-row actions>
-                    <v-btn flat primary @click.native="cancel()">Cancel</v-btn>
-                    <v-btn flat primary @click.native="save()">Save</v-btn>
-                  </v-card-row>
-                </template>
-              </v-date-picker>
-            </v-menu>
+              <v-dialog
+          persistent
+          v-model="menu"
+          lazy
+        >
+          <v-text-field
+            slot="activator"
+            label="Fecha de Retiro"
+            v-model="Estudiante.date"
+            prepend-icon="event"
+            readonly
+            
+          ></v-text-field>
+          <v-date-picker v-model="Estudiante.date" dark  no-title scrollable></v-date-picker>
+        </v-dialog>
+              
             </v-container>
           </v-card-text>
         </v-card-row>
