@@ -2,6 +2,7 @@
 dist/electron/*
 dist/web/*
 build/*
+*.pdf
 data/
 !build/icons
 node_modules/

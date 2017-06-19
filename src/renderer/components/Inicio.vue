@@ -64,13 +64,7 @@
                                 readonly
                                 required
                               ></v-text-field>
-                              <v-date-picker class="grey lighten-1" v-model="Institucion.fechaIngreso" scrollable  no-title actions>
-                                <template scope="{ save, cancel }">
-                                  <v-card-row actions>
-                                    <v-btn flat primary @click.native="cancel()">Cancelar</v-btn>
-                                    <v-btn flat primary @click.native="save()">Guardar</v-btn>
-                                  </v-card-row>
-                                </template>
+                              <v-date-picker class="grey lighten-1" v-model="Institucion.fechaIngreso"  dark scrollable no-title actions>
                               </v-date-picker>
                             </v-dialog>
                           </v-flex>
