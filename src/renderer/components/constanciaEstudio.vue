@@ -8,6 +8,7 @@
             <v-container fluid>
               <h1 class="title text-xs-center pb-3">Costancia de Estudio</h1>
               <v-text-field  v-model='Estudiante.ci' v-bind:rules="reglas" min="7" max="15" maxlength="15" counter label="Cedula del Estudiante" required />
+              <v-text-field  v-model='Estudiante.anio' v-bind:rules="reglas" max="4" maxlength="4" counter label="Año Escolar" required />
             </v-container>
           </v-card-text>
         </v-card-row>
@@ -41,8 +42,7 @@ export default {
     return {
       Estudiante: {
         ci: '',
-        nota: 'A',
-        periodo: '' + new Date().getFullYear() - 1 + '-' + new Date().getFullYear()
+        anio: '' + new Date().getFullYear()
       },
       sb: false,
       msg: '',
