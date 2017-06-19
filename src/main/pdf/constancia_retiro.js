@@ -1,4 +1,5 @@
 var fs = require('fs')
+const path = require('path')
 var PDFDocument = require('pdfkit')
 
 exports.generar = function (obj) {
@@ -9,10 +10,12 @@ exports.generar = function (obj) {
   var rowfirma = 600
 
   /* Imagen 1. */
-  doc.rect(0, 0, 612, 90).fill('black')
+  doc.image(path.join(__static, 'img/head.jpeg'), 0, 0, {width: 612})
+  .text('', 0, 0)
 
   /* Imagen 2. */
-  doc.rect(500, 100, 90, 90).fill('black')
+  doc.image(path.join(__static, 'img/logo.jpeg'), 500, 100, {width: 90})
+  .text('', 0, 0)
 
   /* Membrete. */
   doc.fontSize(10)

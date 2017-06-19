@@ -1,18 +1,21 @@
 var fs = require('fs')
+const path = require('path')
 var PDFDocument = require('pdfkit')
 
 exports.generar = function (obj) {
   var doc = new PDFDocument()
   doc.pipe(fs.createWriteStream('Retiro ' + obj.estudiante.info.cedula + ' ' + obj.estudiante.info.apellidos + ' ' + obj.estudiante.info.nombres + '.pdf'))
-  var body = 'Quien suscribe: ' + obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido + ', Director (a) de la E.B.N. 1º DE MAYO II, código estadístico: ' + obj.cod_estadistico + '; código DEA: ' + obj.cod_dea + ', certifica por medio de la presente que el alumno(a) ' + obj.estudiante.info.apellidos + ' ' + obj.estudiante.info.nombres + ', de ' + obj.estudiante.info.edad + ' años de edad, con cédula escolar Nº: ' + obj.estudiante.info.cedula + ', natural de ' + obj.estudiante.info.direccion + '. Cursante del (' + obj.estudiante.anio + ') grado de Educación Básica, es retirado de este plantel el día ' + obj.retiro.date + '. Por la siguiente causa: ' + obj.retiro.causa + '. Legal: ' + obj.estudiante.representante.nombre + ' ' + obj.estudiante.representante.apellido + '.'
+  var body = 'Quien suscribe: ' + obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido + ', Director (a) de la E.B.N. 1º DE MAYO II, código estadístico: ' + obj.cod_estadistico + '; código DEA: ' + obj.cod_dea + ', certifica por medio de la presente que el alumno(a) ' + obj.estudiante.info.apellidos + ' ' + obj.estudiante.info.nombres + ', de ' + obj.estudiante.info.edad + ' años de edad, con cédula escolar Nº: ' + obj.estudiante.info.cedula + ', natural de ' + obj.estudiante.info.direccion + '. Cursante del (' + obj.estudiante.anio + '). Legal: ' + obj.estudiante.representante.nombre + ' ' + obj.estudiante.representante.apellido + '.'
   var rowMembrete = 120
   var rowfirma = 600
 
   /* Imagen 1. */
-  doc.rect(0, 0, 612, 90).fill('black')
+  doc.image(path.join(__static, 'img/head.jpeg'), 0, 0, {width: 612})
+  .text('', 0, 0)
 
   /* Imagen 2. */
-  doc.rect(500, 100, 90, 90).fill('black')
+  doc.image(path.join(__static, 'img/logo.jpeg'), 500, 100, {width: 90})
+  .text('', 0, 0)
 
   /* Membrete. */
   doc.fontSize(10)
