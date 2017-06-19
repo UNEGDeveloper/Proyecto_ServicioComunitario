@@ -103,7 +103,7 @@ ipcMain.on('create_data', (event, arg) => {
           if (errU) {
             event.returnValue = {
               err: true,
-              msj: 'Ya existe el usuario ' + arg.name
+              msj: 'Error:Ya existe el usuario ' + arg.name
             }
           } else {
             event.returnValue = {
@@ -123,7 +123,7 @@ ipcMain.on('create_data', (event, arg) => {
           if (errM) {
             event.returnValue = {
               err: true,
-              msj: 'Ya existe la matricula ' + arg.name
+              msj: 'Error:Ya existe la matricula ' + arg.name
             }
           } else {
             event.returnValue = {
@@ -148,7 +148,7 @@ ipcMain.on('create_data', (event, arg) => {
                 if (errP) {
                   event.returnValue = {
                     err: true,
-                    msj: 'Ya existe la Persona con cedula:' + arg.ci
+                    msj: 'Error:Ya existe la Persona con cedula:' + arg.ci
                   }
                 } else {
                   Estudiante.create({
@@ -167,7 +167,7 @@ ipcMain.on('create_data', (event, arg) => {
                       docPersona.remove()
                       event.returnValue = {
                         err: true,
-                        msj: 'Imposible crear el Estudiante' + arg.ci
+                        msj: 'Error:Imposible crear el Estudiante' + arg.ci
                       }
                     } else {
                       docMatricula.estudiantes.push(docEstudiante)
@@ -175,7 +175,7 @@ ipcMain.on('create_data', (event, arg) => {
                         if (errM) {
                           event.returnValue = {
                             err: true,
-                            msj: 'Se creo el estudiante pero no se logro agregar a la materia' + arg.matricula
+                            msj: 'Error:Se creo el estudiante pero no se logro agregar a la materia' + arg.matricula
                           }
                         } else {
                           event.returnValue = {
@@ -191,7 +191,7 @@ ipcMain.on('create_data', (event, arg) => {
             } else {
               event.returnValue = {
                 err: true,
-                msj: 'Aparemente la matricula' + arg.matricula + ' no esta en el sistema registrado'
+                msj: 'Error:La matricula' + arg.matricula + ' no esta en el sistema registrado'
               }
             }
           }
@@ -208,7 +208,7 @@ ipcMain.on('create_data', (event, arg) => {
           if (errP) {
             event.returnValue = {
               err: true,
-              msj: 'Ya existe una Persona con la cedula:' + arg.ci
+              msj: 'Error:Ya existe una Persona con la cedula:' + arg.ci
             }
           } else {
             Matricula.findOne({name: arg.matricula}, (errM, docMatricula) => {
@@ -227,7 +227,7 @@ ipcMain.on('create_data', (event, arg) => {
                       docPersona.remove()
                       event.returnValue = {
                         err: true,
-                        msj: 'Ya existe el Docente con codigo ' + arg.cod
+                        msj: 'Error:Ya existe el Docente con codigo ' + arg.cod
                       }
                     } else {
                       docMatricula.docente = docDocente
@@ -235,12 +235,12 @@ ipcMain.on('create_data', (event, arg) => {
                         if (errMM) {
                           event.returnValue = {
                             err: true,
-                            msj: 'Se a creado el Docente' + arg.ci + 'pero no se guardo en la matricula seleccionada.'
+                            msj: 'Se ha creado el Docente' + arg.ci + 'pero no se guardo en la matricula seleccionada.'
                           }
                         } else {
                           event.returnValue = {
                             err: false,
-                            msj: 'Se a creado el Docente ' + arg.ci
+                            msj: 'Se ha creado el Docente ' + arg.ci
                           }
                         }
                       })
@@ -258,12 +258,12 @@ ipcMain.on('create_data', (event, arg) => {
                       docPersona.remove()
                       event.returnValue = {
                         err: true,
-                        msj: 'Ya existe el Docente con codigo ' + arg.cod
+                        msj: 'Error:Ya existe el Docente con codigo ' + arg.cod
                       }
                     } else {
                       event.returnValue = {
                         err: false,
-                        msj: 'Se a creado el Docente ' + arg.ci
+                        msj: 'Se ha creado el Docente ' + arg.ci
                       }
                     }
                   })
@@ -284,7 +284,7 @@ ipcMain.on('create_data', (event, arg) => {
           if (errP) {
             event.returnValue = {
               err: true,
-              msj: 'Ya existe la Persona con cedula:' + arg.ci
+              msj: 'Error:Ya existe la Persona con cedula:' + arg.ci
             }
           } else {
             Personal.create({
@@ -300,7 +300,7 @@ ipcMain.on('create_data', (event, arg) => {
                 docPersona.remove()
                 event.returnValue = {
                   err: true,
-                  msj: 'Ya existe algun personal con codigo ' + arg.cod
+                  msj: 'Error:Ya existe algun personal con codigo ' + arg.cod
                 }
               } else {
                 event.returnValue = {
@@ -315,13 +315,249 @@ ipcMain.on('create_data', (event, arg) => {
       default:
         event.returnValue = {
           err: true,
-          msj: 'Error en la petición '
+          msj: 'Error:Contante con el desarrollador'
         }
     }
   }
 })
 
 ipcMain.on('Constancia_Retiro', (event, arg) => {
+  Institucion.findById(2).populate('responsable').exec(function (errI, docT) {
+    if (errI) throw (errI)
+    else {
+      if (docT) {
+        Estudiante.findOne({ cedula: arg.ci }).populate('info').populate('matricula').exec(function (err, doc) {
+          if (err) {
+            event.returnValue = {
+              err: true,
+              msj: 'Error:Conección con la BD' + arg.ci
+            }
+          } else {
+            if (doc) {
+              if (doc.matricula !== null) {
+                Persona.populate(docT, {path: 'responsable.info'}, (docI) => {
+                  if (docI.responsable !== null) {
+                    var docPdf = {
+                      director: {
+                        profesion: docI.responsable.profesion,
+                        nombre: docI.responsable.info.nombre,
+                        apellido: docI.responsable.info.apellido
+                      },
+                      cod_estadistico: arg.cod,
+                      cod_dea: docI.codigoDea,
+                      estudiante: {
+                        info: {
+                          apellidos: doc.info.apellido,
+                          nombres: doc.info.nombre,
+                          edad: doc.info.edad,
+                          cedula: doc.info.cedula,
+                          direccion: doc.info.direccion
+                        },
+                        anio: doc.matricula.anio,
+                        representante: {
+                          nombre: doc.representante.nombre,
+                          apellido: doc.representante.apellido,
+                          cedula: doc.representante.cedula
+                        }
+                      },
+                      retiro: {
+                        date: arg.date,
+                        causa: arg.motivo
+                      }
+                    }
+                    var constanciaRetiro = require('./pdf/constancia_retiro')
+                    constanciaRetiro.generar(docPdf)
+                    Matricula.findByIdAndUpdate(doc.matricula._id, { $pull: {estudiantes: doc._id} }, (errM, docMatricula) => {
+                      if (errM) {
+                        event.returnValue = {
+                          err: true,
+                          msj: 'Error:No se encuentra la matricula del estudiante'
+                        }
+                      } else {
+                        doc.matricula = null
+                        doc.save((errSE) => {
+                          if (errSE) {
+                            event.returnValue = {
+                              err: true,
+                              msj: 'Error:El estudiante no se elimino de su matricula'
+                            }
+                          } else {
+                            event.returnValue = {
+                              err: false,
+                              msj: 'Estudiante retirado'
+                            }
+                          }
+                        })
+                      }
+                    })
+                  } else {
+                    event.returnValue = {
+                      err: true,
+                      msj: 'Error:No hay un director asignador, registrelo por favor'
+                    }
+                  }
+                })
+              } else {
+                event.returnValue = {
+                  err: true,
+                  msj: 'Error:Estudiante no matriculado (se retiro o se graduo).'
+                }
+              }
+            } else {
+              event.returnValue = {
+                err: true,
+                msj: 'Error:No se encuentra el Estudiante con Cedula ' + arg.ci
+              }
+            }
+          }
+        })
+      } else {
+        event.returnValue = {
+          err: true,
+          msj: 'Error:No se encuentra ninguna Institucion Guardada.'
+        }
+      }
+    }
+  })
+})
+
+ipcMain.on('Constancia_Emergencia', (event, arg) => {
+  Institucion.findById(2).populate('responsable', 'cargo telefono info').populate('personalReponsables', 'cargo telefono info').exec(function (errI, docI) {
+    if (errI) throw (errI)
+    else {
+      if (docI) {
+        Persona.populate(docI, {path: 'responsable.info', select: 'nombre apellido'}, function (errID, docID) {
+          Persona.populate(docID, {path: 'personalReponsables.info', select: 'nombre apellido'}, function (errID, docT) {
+            var docPdf = {
+              director: {
+                cargo: docT.responsable.cargo,
+                nombre: docT.responsable.info.nombre,
+                apellido: docT.responsable.info.apellido,
+                telefono: docT.responsable.telefono
+              },
+              responsables: docT.personalReponsables
+            }
+            console.log(docPdf)
+            var numeroEmergencia = require('./pdf/numero_emergencia')
+            numeroEmergencia.generar(docPdf)
+            event.returnValue = {
+              err: false,
+              msj: 'Generado.'
+            }
+          })
+        })
+      } else {
+        event.returnValue = {
+          err: true,
+          msj: 'Error:No se encuentra ninguna Institucion Guardada.'
+        }
+      }
+    }
+  })
+})
+
+ipcMain.on('constancia_sexto_grado', (event, arg) => {
+  Institucion.findById(2).populate('responsable', 'profesion info').exec(function (errI, docT) {
+    console.log(docT)
+    if (errI) throw (errI)
+    else {
+      if (docT) {
+        Estudiante
+        .findOne({ cedula: arg.ci }).populate('info').populate('matricula', '_id anio').exec((err, doc) => {
+          if (err) {
+            event.returnValue = {
+              err: true,
+              msj: 'Error:Conección con la BD' + arg.ci
+            }
+          } else {
+            if (doc) {
+              if (doc.matricula !== null) {
+                if (doc.matricula.anio === 6) {
+                  Persona.populate(docT, {path: 'responsable.info', select: 'nombre apellido'}, (docI) => {
+                    if (docI.responsable !== null) {
+                      var docPdf = {
+                        director: {
+                          profesion: docI.responsable.profesion,
+                          nombre: docI.responsable.info.nombre,
+                          apellido: docI.responsable.info.apellido
+                        },
+                        cod_estadistico: arg.cod,
+                        cod_dea: docI.codigoDea,
+                        estudiante: {
+                          info: {
+                            apellidos: doc.info.apellido,
+                            nombres: doc.info.nombre,
+                            edad: doc.info.edad,
+                            cedula: doc.info.cedula,
+                            direccion: doc.info.direccion
+                          },
+                          fechaNacimiento: new Date(doc.fechaNacimiento).toLocaleDateString(),
+                          nota: arg.nota
+                        }
+                      }
+                      var constanciaSextoGrado = require('./pdf/constancia_sexto_grado')
+                      constanciaSextoGrado.generar(docPdf)
+                      Matricula.findByIdAndUpdate(doc.matricula._id, { $pull: {estudiantes: doc._id} }, (errM, docMatricula) => {
+                        if (errM) {
+                          event.returnValue = {
+                            err: true,
+                            msj: 'Error:No se encuentra la matricula del estudiante'
+                          }
+                        } else {
+                          doc.matricula = null
+                          doc.save((errSE) => {
+                            if (errSE) {
+                              event.returnValue = {
+                                err: true,
+                                msj: 'Error:El estudiante no se elimino de su matricula'
+                              }
+                            } else {
+                              event.returnValue = {
+                                err: false,
+                                msj: 'Documento generado.'
+                              }
+                            }
+                          })
+                        }
+                      })
+                    } else {
+                      event.returnValue = {
+                        err: true,
+                        msj: 'Error:El director no esta registrado en el sistema, por favor agregelo'
+                      }
+                    }
+                  })
+                } else {
+                  event.returnValue = {
+                    err: true,
+                    msj: 'Error:Este estudiante no esta en 6 grado para graduarse.'
+                  }
+                }
+              } else {
+                event.returnValue = {
+                  err: true,
+                  msj: 'Error:Estudiante no matriculado (se retiro o se graduo).'
+                }
+              }
+            } else {
+              event.returnValue = {
+                err: true,
+                msj: 'Error:No se encuentra el Estudiante con Cedula' + arg.ci
+              }
+            }
+          }
+        })
+      } else {
+        event.returnValue = {
+          err: true,
+          msj: 'Error:No se encuentra ninguna Institucion Guardada'
+        }
+      }
+    }
+  })
+})
+
+ipcMain.on('constancia_estudio', (event, arg) => {
   Institucion.findById(2).populate('responsable').exec(function (errI, docT) {
     if (errI) throw (errI)
     else {
@@ -365,48 +601,25 @@ ipcMain.on('Constancia_Retiro', (event, arg) => {
                         causa: arg.motivo
                       }
                     }
-                    var constanciaRetiro = require('./pdf/constancia_retiro')
-                    constanciaRetiro.generar(docPdf)
-                    Matricula.findByIdAndUpdate(doc.matricula._id, { $pull: {estudiantes: doc._id} }, (errM, docMatricula) => {
-                      if (errM) {
-                        event.returnValue = {
-                          err: true,
-                          msj: 'No se encuentra la matricula del estudiante'
-                        }
-                      } else {
-                        doc.matricula = null
-                        doc.save((errSE) => {
-                          if (errSE) {
-                            event.returnValue = {
-                              err: true,
-                              msj: 'El estudiante no se elimino de su matricula'
-                            }
-                          } else {
-                            event.returnValue = {
-                              err: false,
-                              msj: 'Estudiante retirado, revise su directorio'
-                            }
-                          }
-                        })
-                      }
-                    })
+                    var constanciaEstudio = require('./pdf/constancia_estudio')
+                    constanciaEstudio.generar(docPdf)
                   } else {
                     event.returnValue = {
                       err: true,
-                      msj: 'No hay un director asignador... asignelo por favor'
+                      msj: 'Error:No hay un director asignador, registrelo por favor'
                     }
                   }
                 })
               } else {
                 event.returnValue = {
                   err: true,
-                  msj: 'Error estudiante no matriculado (se retiro o se graduo).'
+                  msj: 'Error:Estudiante no matriculado (se retiro o se graduo).'
                 }
               }
             } else {
               event.returnValue = {
                 err: true,
-                msj: 'No se encuentra el Estudiante con Cedula ' + arg.ci
+                msj: 'Error:No se encuentra el Estudiante con Cedula ' + arg.ci
               }
             }
           }
@@ -414,155 +627,11 @@ ipcMain.on('Constancia_Retiro', (event, arg) => {
       } else {
         event.returnValue = {
           err: true,
-          msj: 'No se encuentra ninguna Institucion Guardada, esto es critico... lo mejor es contactar a Rafael Rojas'
+          msj: 'Error:No se encuentra ninguna Institucion Guardada.'
         }
       }
     }
   })
-})
-
-ipcMain.on('Constancia_Emergencia', (event, arg) => {
-  Institucion.findById(2).populate('responsable', 'cargo telefono info').populate('personalReponsables', 'cargo telefono info').exec(function (errI, docI) {
-    if (errI) throw (errI)
-    else {
-      if (docI) {
-        Persona.populate(docI, {path: 'responsable.info', select: 'nombre apellido'}, function (errID, docID) {
-          Persona.populate(docID, {path: 'personalReponsables.info', select: 'nombre apellido'}, function (errID, docT) {
-            var docPdf = {
-              director: {
-                cargo: docT.responsable.cargo,
-                nombre: docT.responsable.info.nombre,
-                apellido: docT.responsable.info.apellido,
-                telefono: docT.responsable.telefono
-              },
-              responsables: docT.personalReponsables
-            }
-            console.log(docPdf)
-            var numeroEmergencia = require('./pdf/numero_emergencia')
-            numeroEmergencia.generar(docPdf)
-            event.returnValue = {
-              err: false,
-              msj: 'Generado.'
-            }
-          })
-        })
-      } else {
-        event.returnValue = {
-          err: true,
-          msj: 'No se encuentra ninguna Institucion Guardada, esto es critico... lo mejor es contactar a Rafael Rojas'
-        }
-      }
-    }
-  })
-})
-
-ipcMain.on('constancia_sexto_grado', (event, arg) => {
-  Institucion.findById(2).populate('responsable', 'profesion info').exec(function (errI, docT) {
-    console.log(docT)
-    if (errI) throw (errI)
-    else {
-      if (docT) {
-        Estudiante
-        .findOne({ cedula: arg.ci }).populate('info').populate('matricula', '_id anio').exec((err, doc) => {
-          if (err) {
-            event.returnValue = {
-              err: true,
-              msj: 'Error al Conectarse con la BD' + arg.ci
-            }
-          } else {
-            if (doc) {
-              if (doc.matricula !== null) {
-                if (doc.matricula.anio === 6) {
-                  Persona.populate(docT, {path: 'responsable.info', select: 'nombre apellido'}, (docI) => {
-                    if (docI.responsable !== null) {
-                      var docPdf = {
-                        director: {
-                          profesion: docI.responsable.profesion,
-                          nombre: docI.responsable.info.nombre,
-                          apellido: docI.responsable.info.apellido
-                        },
-                        cod_estadistico: arg.cod,
-                        cod_dea: docI.codigoDea,
-                        estudiante: {
-                          info: {
-                            apellidos: doc.info.apellido,
-                            nombres: doc.info.nombre,
-                            edad: doc.info.edad,
-                            cedula: doc.info.cedula,
-                            direccion: doc.info.direccion
-                          },
-                          fechaNacimiento: new Date(doc.fechaNacimiento).toLocaleDateString(),
-                          nota: arg.nota
-                        }
-                      }
-                      var constanciaSextoGrado = require('./pdf/constancia_sexto_grado')
-                      constanciaSextoGrado.generar(docPdf)
-                      Matricula.findByIdAndUpdate(doc.matricula._id, { $pull: {estudiantes: doc._id} }, (errM, docMatricula) => {
-                        if (errM) {
-                          event.returnValue = {
-                            err: true,
-                            msj: 'No se encuentra la matricula del estudiante'
-                          }
-                        } else {
-                          doc.matricula = null
-                          doc.save((errSE) => {
-                            if (errSE) {
-                              event.returnValue = {
-                                err: true,
-                                msj: 'El estudiante no se elimino de su matricula'
-                              }
-                            } else {
-                              event.returnValue = {
-                                err: false,
-                                msj: 'Felicidades al Estudiante, revise su directorio para el documento. Recuerde que debe eliminarlo manualmente en modificar Estudiante'
-                              }
-                            }
-                          })
-                        }
-                      })
-                    } else {
-                      event.returnValue = {
-                        err: true,
-                        msj: 'El director no esta registrado en el sistema, por favor agregelo'
-                      }
-                    }
-                  })
-                } else {
-                  event.returnValue = {
-                    err: true,
-                    msj: 'Este estudiante no esta en 6 grado para graduarse.'
-                  }
-                }
-              } else {
-                event.returnValue = {
-                  err: true,
-                  msj: 'Error estudiante no matriculado (se retiro o se graduo).'
-                }
-              }
-            } else {
-              event.returnValue = {
-                err: true,
-                msj: 'No se encuentra el Estudiante con Cedula ' + arg.ci
-              }
-            }
-          }
-        })
-      } else {
-        event.returnValue = {
-          err: true,
-          msj: 'No se encuentra ninguna Institucion Guardada, esto es critico... lo mejor es contactar a Rafael Rojas'
-        }
-      }
-    }
-  })
-})
-
-ipcMain.on('constancia_estudio', (event, arg) => {
-  console.log('no operativo')
-  event.returnValue = {
-    err: true,
-    msj: 'En mantenimiento'
-  }
 })
 
 ipcMain.on('Constancia_trabajo', (event, arg) => {

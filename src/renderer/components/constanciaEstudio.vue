@@ -1,30 +1,37 @@
 <template lang="html">
-  <div class="">
-    <v-container>
-      <v-layout row wrap justify-center class="text-xs-center">
-        <v-flex xs10 md8 >
-          <div class="pt-5">
-              <div class="pt-5">
-                <div class="pt-5">
-                  <div class="pt-5 ">
-                    <div class="pt-5 ">
-                      <v-progress-circular indeterminate v-bind:size="70" v-bind:width="4" class="green--text"></v-progress-circular>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </div>
-        </v-flex >
-      </v-layout>
-    </v-container>
+  <div class="pa-5">
+    <v-layout justify-center>
+      <v-flex xs12 md4 >
+        <v-card class="elevation-8">
+        <v-card-row>
+          <v-card-text>
+            <v-container fluid>
+              <h1 class="title text-xs-center pb-3">Costancia de Estudio</h1>
+              <v-text-field  v-model='Estudiante.ci' v-bind:rules="reglas" min="7" max="15" maxlength="15" counter label="Cedula del Estudiante" required />
+            </v-container>
+          </v-card-text>
+        </v-card-row>
+        <v-card-row actions>
+          <v-btn v-tooltip:top="{ html: 'Volver' }" @click.native="volver()" icon darke>
+            <v-icon large >navigate_before</v-icon>
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn class="mr-3"  primary light raise :disabled="Estudiante.ci.length < 7 || errores" @click.native="general">Generar Documento</v-btn>
+        </v-card-row>
+        <div v-if="pl">
+           <v-progress-linear v-bind:indeterminate="pl"></v-progress-linear>
+        </div>
+      </v-card>
+    </v-flex>
+    </v-layout>
     <v-snackbar
-          :timeout="3000"
-          :bottom="true"
-          :right="true"
-          v-model="sb"
-        >
-          {{msg}}
-        </v-snackbar>
+      :timeout="2000"
+      :bottom="true"
+      :right="true"
+      v-model="sb"
+    >
+      {{msg}}
+    </v-snackbar>
   </div>
 </template>
 
@@ -32,38 +39,57 @@
 export default {
   data () {
     return {
+      Estudiante: {
+        ci: '',
+        nota: 'A',
+        periodo: '' + new Date().getFullYear() - 1 + '-' + new Date().getFullYear()
+      },
       sb: false,
-      msg: ''
+      msg: '',
+      pl: false,
+      menu: false,
+      reglas: [
+        (s) => {
+          if (!isNaN(s)) {
+            this.errores = false
+            return true
+          } else {
+            this.errores = true
+            return 'No ingrese simbolos o letras solo numeros'
+          }
+        }
+      ],
+      errores: false
     }
   },
-  created () {
-    var vm = this
-    function enviar () {
-      return new Promise(function () {
-        setTimeout(function () {
-          var {ipcRenderer} = require('electron')
-          var res = ipcRenderer.sendSync('constancia_estudio')
-          if (res.err) {
-            vm.inicio = false
-            vm.sb = true
-            vm.msg = res.msj
-            setTimeout(function () {
-              vm.$router.go(-1)
-            }, 2000)
-          } else {
-            vm.sb = true
-            vm.msg = res.msj
-            setTimeout(function () {
-              vm.$router.go(-1)
-            }, 2000)
-          }
-        }, 1000)
-      })
+  methods: {
+    general () {
+      this.sb = true
+      this.pl = true
+      this.msg = 'Peticion Enviada'
+      var vm = this
+      async function preparar () {
+        var {ipcRenderer} = require('electron')
+        var res = ipcRenderer.sendSync('constancia_estudio', vm.Estudiante)
+        if (res.err) {
+          vm.sb = true
+          vm.msg = res.msj
+          vm.pl = false
+        } else {
+          vm.sb = true
+          vm.msg = 'Se genero el Documento en su directorio.'
+          vm.pl = false
+        }
+      }
+      preparar()
+    },
+    volver () {
+      this.$router.go(-1)
     }
-    enviar()
   }
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
+
 </style>
