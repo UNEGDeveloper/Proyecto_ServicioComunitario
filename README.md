@@ -1,17 +1,17 @@
-# servicio
+# Servicio
 
-> An electron-vue project
+> Proyecto de servicio comunitario
 
-#### Build Setup
+#### Scripts
 
 ``` bash
-# install dependencies
+# instalar dependencias
 npm install
 
-# serve with hot reload at localhost:9080
+# Pruebas con refescamiento de cambios 
 npm run dev
 
-# build electron application for production
+# Contrucción de aplicación en producción
 npm run build
 
 

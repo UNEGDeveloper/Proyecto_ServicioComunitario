@@ -194,9 +194,9 @@ export default {
             vm.msg = res.msj
             setTimeout(function () {
               vm.$router.push('/Bienvenida')
-            }, 3000)
+            }, 1000)
           }
-        }, 2000)
+        }, 1000)
       })
     }
     enviar()

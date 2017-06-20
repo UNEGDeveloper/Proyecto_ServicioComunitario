@@ -3,6 +3,9 @@
     <v-layout justify-center>
       <v-flex xs12 md4 >
         <v-card class="elevation-8">
+          <div v-if="pl">
+           <v-progress-linear height="5" v-bind:indeterminate="pl"></v-progress-linear>
+        </div>
         <v-card-row>
           <v-card-text>
             <v-container fluid>
@@ -19,9 +22,6 @@
           <v-spacer></v-spacer>
           <v-btn class="mr-3"  primary light raise :disabled="Estudiante.ci.length < 7 || errores" @click.native="general">Generar Documento</v-btn>
         </v-card-row>
-        <div v-if="pl">
-           <v-progress-linear v-bind:indeterminate="pl"></v-progress-linear>
-        </div>
       </v-card>
     </v-flex>
     </v-layout>
@@ -63,12 +63,12 @@ export default {
     }
   },
   methods: {
-    general () {
+    async general () {
       this.sb = true
       this.pl = true
       this.msg = 'Peticion Enviada'
       var vm = this
-      async function preparar () {
+      await new Promise(function () {
         var {ipcRenderer} = require('electron')
         var res = ipcRenderer.sendSync('constancia_estudio', vm.Estudiante)
         if (res.err) {
@@ -77,11 +77,10 @@ export default {
           vm.pl = false
         } else {
           vm.sb = true
-          vm.msg = 'Se genero el Documento en su directorio.'
+          vm.msg = res.msj
           vm.pl = false
         }
-      }
-      preparar()
+      })
     },
     volver () {
       this.$router.go(-1)
