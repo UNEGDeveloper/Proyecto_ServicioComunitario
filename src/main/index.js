@@ -1230,15 +1230,20 @@ ipcMain.on('put', (event, arg) => {
               if (err) {
                 event.returnValue = {
                   err: true,
-                  msj: ''
+                  msj: 'Error:Estudiante no registrado'
                 }
               } else {
                 if (arg.data.matricula.name !== '') {
                   Matricula.findOne({name: arg.data.matricula.name}, (errM, docNMatricula) => {
                     if (errM) {
+                      docEstudiante.cedula = arg.data.info.cedula
+                      docEstudiante.genero = arg.data.genero
+                      docEstudiante.representante = arg.data.representante
+                      docEstudiante.matricula = null
+                      docEstudiante.save()
                       event.returnValue = {
                         err: true,
-                        msj: ''
+                        msj: 'Error:No existe ' + arg.data.matricula.name
                       }
                     } else {
                       docNMatricula.estudiantes.push(docEstudiante._id)
@@ -1278,6 +1283,11 @@ ipcMain.on('put', (event, arg) => {
                   Matricula.findByIdAndUpdate(docEstudiante.matricula._id, {$pull: {estudiantes: docEstudiante._id}}, (errM, docMatricula) => {
                     Matricula.findOne({name: arg.data.matricula.name}, (errM, docNMatricula) => {
                       if (errM) {
+                        docEstudiante.cedula = arg.data.info.cedula
+                        docEstudiante.genero = arg.data.genero
+                        docEstudiante.representante = arg.data.representante
+                        docEstudiante.matricula = null
+                        docEstudiante.save()
                         event.returnValue = {
                           err: true,
                           msj: 'Error Matricuala not found'

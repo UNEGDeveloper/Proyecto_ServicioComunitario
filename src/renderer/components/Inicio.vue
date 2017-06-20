@@ -27,6 +27,7 @@
                   <v-stepper-content step="1">
                     <v-card class="grey lighten-3 z-depth-1 mb-5">
                       <v-card-text class="title">
+                        <blockquote> 
                         Bienvenid@ sea usted a nuestro sistema de administración estudiantil. <br>
                         <br>
                         Esta aqui para configurar su aplicación con los datos basicos de la Institución <br>
@@ -34,6 +35,7 @@
                          Datos del Director (a) y Codigos que usa la misma. <br>
                         <br>
                         Por favor precione Continuar y rellene todos los campos acontinuacion...
+                         </blockquote> 
                       </v-card-text>
                     </v-card>
                     <v-btn primary @click.native="e1 = 2" light>Continuar</v-btn>
