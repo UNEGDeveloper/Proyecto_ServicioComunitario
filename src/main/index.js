@@ -439,7 +439,6 @@ ipcMain.on('Constancia_Emergencia', (event, arg) => {
               },
               responsables: docT.personalReponsables
             }
-            console.log(docPdf)
             var numeroEmergencia = require('./pdf/numero_emergencia')
             numeroEmergencia.generar(docPdf)
             event.returnValue = {
@@ -460,7 +459,6 @@ ipcMain.on('Constancia_Emergencia', (event, arg) => {
 
 ipcMain.on('constancia_sexto_grado', (event, arg) => {
   Institucion.findById(2).populate('responsable', 'profesion info').exec(function (errI, docT) {
-    console.log(docT)
     if (errI) throw (errI)
     else {
       if (docT) {
@@ -561,7 +559,6 @@ ipcMain.on('constancia_sexto_grado', (event, arg) => {
 
 ipcMain.on('constancia_estudio', (event, arg) => {
   Institucion.findById(2).populate('responsable', 'profesion info').exec(function (errI, docT) {
-    console.log(docT)
     if (errI) throw (errI)
     else {
       if (docT) {
@@ -1037,7 +1034,6 @@ ipcMain.on('remove', (event, arg) => {
               msj: 'Error en el query'
             }
           } else {
-            console.log(doc)
             if (doc.matricula) {
               Matricula.findById(doc.matricula._id, (errM, docMatricula) => {
                 docMatricula.estudiantes.pull(doc._id)
