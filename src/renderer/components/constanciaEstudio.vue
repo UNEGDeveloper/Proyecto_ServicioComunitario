@@ -64,23 +64,19 @@ export default {
   },
   methods: {
     async general () {
-      this.sb = true
       this.pl = true
-      this.msg = 'Peticion Enviada'
       var vm = this
-      await new Promise(function () {
-        var {ipcRenderer} = require('electron')
-        var res = ipcRenderer.sendSync('constancia_estudio', vm.Estudiante)
-        if (res.err) {
+      setTimeout(() => {
+        return new Promise(() => {
+          var {ipcRenderer} = require('electron')
+          var res = ipcRenderer.sendSync('constancia_estudio', vm.Estudiante)
           vm.sb = true
           vm.msg = res.msj
-          vm.pl = false
-        } else {
-          vm.sb = true
-          vm.msg = res.msj
-          vm.pl = false
-        }
-      })
+          setTimeout(() => {
+            vm.pl = false
+          }, 2000)
+        })
+      }, 2000)
     },
     volver () {
       this.$router.go(-1)

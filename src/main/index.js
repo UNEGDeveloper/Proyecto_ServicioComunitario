@@ -493,7 +493,8 @@ ipcMain.on('constancia_sexto_grado', (event, arg) => {
                           },
                           fechaNacimiento: new Date(doc.fechaNacimiento).toLocaleDateString(),
                           nota: arg.nota
-                        }
+                        },
+                        periodo: arg.periodo
                       }
                       var constanciaSextoGrado = require('./pdf/constancia_sexto_grado')
                       constanciaSextoGrado.generar(docPdf)
