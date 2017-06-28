@@ -65,9 +65,6 @@
            </v-btn>
            <v-list>
              <v-list-item>
-               <v-list-tile>
-                 <v-list-tile-title>Editar {{user}}</v-list-tile-title>
-               </v-list-tile>
                <v-list-tile @click.native="salir">
                  <v-list-tile-title>Salir</v-list-tile-title>
                </v-list-tile>
