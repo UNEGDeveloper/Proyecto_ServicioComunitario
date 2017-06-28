@@ -1,20 +1,21 @@
 var fs = require('fs')
-const path = require('path')
 var PDFDocument = require('pdfkit')
+var dateFormat = require('dateformat')
+var now = new Date()
 
 exports.generar = function (obj) {
   var doc = new PDFDocument()
   doc.pipe(fs.createWriteStream('Trabajo_Personal ' + obj.personal.info.cedula + ' ' + obj.personal.info.apellido + ' ' + obj.personal.info.nombre + '.pdf'))
-  var body = 'Quien suscribe: ' + obj.director.profesion + '. ' + obj.director.nombre + '. Titular de la Cédula  de  Identidad  Nº ' + obj.director.cedula + '. Director (a)  de  Dependencia: ' + obj.director.dependencia + ', a través de la presente informo que  el  (la)  Ciudadano  (a): ' + obj.personal.info.nombre + ', titular de la  Cedula de identidad  Nº ' + obj.personal.info.cedula + ', cumple funciones en esta institución Educativa  desde: ' + obj.personal.fechaIngreso + ' hasta la presente fecha, por necesidad de servicios, desempeñando el cargo de ' + obj.personal.cargo + ', Código de cargo Nº ' + obj.personal.cod_cargo + ', en el turno de la ' + obj.personal.turno + ', y es nomina de: ' + obj.personal.dependencia + ' Código  de dependencia  Nº 06   ' + obj.cod_dea + '. Devengando un sueldo de ' + obj.personal.sueldo + 'Bsf.'
+  var body = 'Quien suscribe: ' + obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido + '. Titular de la Cédula  de  Identidad  Nº V' + obj.director.cedula + '. Director (a)  de  Dependencia: ' + obj.director.dependencia + ', a través de la presente informo que  el  (la)  Ciudadano  (a): ' + obj.personal.info.apellido + ' ' + obj.personal.info.nombre + ', titular de la  Cedula de identidad  Nº V' + obj.personal.info.cedula + ', cumple funciones en esta institución Educativa  desde: ' + obj.personal.fechaIngreso + ' hasta la presente fecha, por necesidad de servicios, desempeñando el cargo de ' + obj.personal.cargo + ', Código de cargo Nº ' + obj.personal.cod_cargo + ', en el turno de la ' + obj.personal.turno + ', y es nomina de: ' + obj.personal.dependencia + ' Código  de dependencia  Nº 06   ' + obj.cod_dea + '. Devengando un sueldo de ' + obj.personal.sueldo + 'Bsf.'
   var rowMembrete = 120
   var rowfirma = 640
 
   /* Imagen 1. */
-  doc.image(path.join(__static, 'img/head.jpeg'), 0, 0, {width: 612})
+  doc.image('static/img/head.jpeg', 0, 0, {width: 612})
   .text('', 0, 0)
 
   /* Imagen 2. */
-  doc.image(path.join(__static, 'img/logo.jpeg'), 500, 100, {width: 90})
+  doc.image('static/img/logo.jpeg', 500, 100, {width: 90})
   .text('', 0, 0)
 
   /* Membrete */
@@ -57,13 +58,12 @@ exports.generar = function (obj) {
     ellipsis: true
   })
 
-  /* Cuerpo del documento #2. */
+ /* Cuerpo del documento. */
   doc.text('', 90, 530)
   .font('Times-Roman', 13)
   .moveDown()
-  .text(' Información que se emite a solicitud de la parte interesada, el ' + Date.now + '.', {
+  .text('Constancia que se expide de la parte interesada, el día ' + dateFormat(now, 'dd') + ', del mes ' + dateFormat(now, 'mm') + ' del año ' + dateFormat(now, 'yyyy'), {
     width: 440,
-    indent: 30,
     align: 'justify',
     height: 300,
     ellipsis: true
@@ -74,7 +74,7 @@ exports.generar = function (obj) {
     align: 'center',
     width: 150
   })
-  .text(obj.director.profesion + '. ' + obj.director.nombre, 240, rowfirma + 15, {
+  .text(obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido, 240, rowfirma + 15, {
     align: 'center',
     width: 150
   })

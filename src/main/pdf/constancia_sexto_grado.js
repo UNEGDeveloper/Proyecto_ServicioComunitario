@@ -7,7 +7,7 @@ var now = new Date()
 exports.generar = function (obj) {
   var doc = new PDFDocument()
   doc.pipe(fs.createWriteStream('Sexto_Grado ' + obj.estudiante.info.cedula + ' ' + obj.estudiante.info.apellidos + ' ' + obj.estudiante.info.nombres + '.pdf'))
-  var body = 'Quien suscribe: ' + obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido + ', Director (a) de la E.B.N. 1º DE MAYO II, que funciona en la urbanización Nueva Chirica de San Félix- Edo. Bolívar. Después de haber revisado el libro de acta de exámenes finales del año 2013-2014, hace constar por medio de la presente, que el o (la) Ciudadano (a) ' + obj.estudiante.info.apellidos + ', ' + obj.estudiante.info.nombres + ', titular de la cédula de identidad Nª ' + obj.estudiante.info.cedula + ', natural de  ' + obj.estudiante.info.direccion + ', nacido (a) el: ' + obj.estudiante.fechaNacimiento + ', cursó y aprobó el sexto grado de educación básica y obtuvo LITERAL: ' + obj.estudiante.nota + '.'
+  var body = 'Quien suscribe: ' + obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido + ', Director (a) de la E.B.N. 1º DE MAYO II, que funciona en la urbanización Nueva Chirica de San Félix- Edo. Bolívar. Después de haber revisado el libro de acta de exámenes finales del año ' + obj.periodo + ', hace constar por medio de la presente, que el o (la) Ciudadano (a) ' + obj.estudiante.info.apellidos + ' ' + obj.estudiante.info.nombres + ', titular de la cédula de identidad Nº V' + obj.estudiante.info.cedula + ', natural de  ' + obj.estudiante.info.direccion + ', nacido (a) el: ' + obj.estudiante.fechaNacimiento + ', cursó y aprobó el sexto grado de educación básica y obtuvo LITERAL: ' + obj.estudiante.nota + '.'
   var rowMembrete = 120
   var rowfirma = 650
 
@@ -64,7 +64,7 @@ exports.generar = function (obj) {
     align: 'center',
     width: 150
   })
-  .text(obj.director.profesion + '. ' + obj.director.nombre, 100, rowfirma + 15, {
+  .text(obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido, 100, rowfirma + 15, {
     align: 'center',
     width: 150
   })

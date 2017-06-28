@@ -6,7 +6,7 @@ exports.generar = function (obj) {
   doc.pipe(fs.createWriteStream('Numeros de emergencia.pdf'))
   var rowMembrete = 120
   var rowCuerpo = 370
-  /* Imagen 1. */
+    /* Imagen 1. */
   doc.image(path.join(__static, 'img/head.jpeg'), 0, 0, {width: 612})
   .text('', 0, 0)
 
@@ -50,7 +50,7 @@ exports.generar = function (obj) {
   .moveDown()
 
   doc.fontSize(13)
-  .text(obj.director.cargo + ': ' + obj.director.nombre + ' ' + obj.director.apellido + ' . Tlf.: ' + obj.director.telefono, 60, rowCuerpo, {
+  .text(obj.director.cargo + ': ' + obj.director.nombre + ' ' + obj.director.apellido + ' . Tlf.: ' + obj.director.telefono + '\n\nSubdirector Pedagógica ( E ) Teléf.: 0416-7983210/ 0416-3789604\n\nSubdirector Administrativo( E ) Teléf.: 0424-9614896\n\nCarolina Guevara Teléf.: 0414-8917366\n\nGermán Martínez Teléf.: 0426-5917725\n\nCarmen Mujica Teléf.: 0426-3993489\n\nDirector de la Policía Ciudadano Ayala Teléf.: 0424-9332376\n\nPolicía Patrullero Ciudadano Rómulo Teléf.: 0424-9373626\n\nPatrulleros del Cuadrante Nueva Chirica Teléf.: 0416-6104280\n\nPastorita Garrido Teléf.: 0424-9386967 ', 60, rowCuerpo, {
     align: 'left',
     width: 500
   })

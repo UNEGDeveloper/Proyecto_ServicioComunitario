@@ -4,8 +4,8 @@ var PDFDocument = require('pdfkit')
 
 exports.generar = function (obj) {
   var doc = new PDFDocument()
-  doc.pipe(fs.createWriteStream('Retiro ' + obj.estudiante.info.cedula + ' ' + obj.estudiante.info.apellidos + ' ' + obj.estudiante.info.nombres + '.pdf'))
-  var body = 'Quien suscribe: ' + obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido + ', Director (a) de la E.B.N. 1º DE MAYO II, código estadístico: ' + obj.cod_estadistico + '; código DEA: ' + obj.cod_dea + ', certifica por medio de la presente que el alumno(a) ' + obj.estudiante.info.apellidos + ' ' + obj.estudiante.info.nombres + ', de ' + obj.estudiante.info.edad + ' años de edad, con cédula escolar Nº: ' + obj.estudiante.info.cedula + ', natural de ' + obj.estudiante.info.direccion + '. Cursante del (' + obj.estudiante.anio + '). Legal: ' + obj.estudiante.representante.nombre + ' ' + obj.estudiante.representante.apellido + '.'
+  doc.pipe(fs.createWriteStream('Constancia_estudio_' + obj.estudiante.info.cedula + '_' + obj.estudiante.info.apellidos + '_' + obj.estudiante.info.nombres + '.pdf'))
+  var body = 'Quien suscribe,' + obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido + ', Director(A) de la E.B.N Primero de MAYO II, hace constar por medio de la presente que el (la) alumno(a): ' + obj.estudiante.info.nombres + ' ' + obj.estudiante.info.apellidos + ', de ' + obj.estudiante.info.edad + ' años de edad, nacido(a) en: ' + obj.estudiante.info.direccion + ', fecha de nacimiento: ' + obj.estudiante.fechaNacimiento + ', cédula escolar N°: V ' + obj.estudiante.info.cedula + ', fue inscrito(a) en esta institución, para cursar el (' + obj.estudiante.anio + ') grado de Educación Básica.\n De acuerdo al artículo 108 del reglamento general de la ley orgánica de educación para cursar el nuevo año escolar: ' + obj.anioEscolar
   var rowMembrete = 120
   var rowfirma = 600
 
@@ -42,7 +42,7 @@ exports.generar = function (obj) {
 
   /* Título. */
   doc.fontSize(20)
-  .text('CONSTANCIA DE RETIRO', 180, 250)
+  .text('CONSTANCIA DE ESTUDIO', 180, 250)
 
   /* Cuerpo del documento. */
   doc.text('', 90, 300)
@@ -58,25 +58,15 @@ exports.generar = function (obj) {
   })
 
   /* firma de la directora. */
-  doc.text('_________', 100, rowfirma, {
+  doc.text('_______________________', 240, rowfirma, {
     align: 'center',
     width: 150
   })
-  .text(obj.director.profesion + '. ' + obj.director.nombre, 100, rowfirma + 15, {
+  .text(obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido, 240, rowfirma + 15, {
     align: 'center',
     width: 150
   })
-  .text('DIRECTORA', 100, rowfirma + 30, {
-    align: 'center',
-    width: 150
-  })
-
-  /* firma del representante. */
-  doc.text('_________', 364, rowfirma, {
-    align: 'center',
-    width: 150
-  })
-  .text('Firma del Representante', 364, rowfirma + 15, {
+  .text('DIRECTORA', 240, rowfirma + 60, {
     align: 'center',
     width: 150
   })
@@ -87,13 +77,13 @@ exports.generar = function (obj) {
   .moveDown()
   .text('Dirección: Urb. Nueva Chirica, Calle Principal, Diagonal a la Panadería El Funchal.', {
     width: 440,
-    align: 'justify',
+    align: 'center',
     height: 300,
     ellipsis: true
   })
   .text('Teléfono: 0286-8089508', {
     width: 440,
-    align: 'justify',
+    align: 'center',
     height: 300,
     ellipsis: true
   })
