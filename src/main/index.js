@@ -621,7 +621,7 @@ ipcMain.on('constancia_estudio', (event, arg) => {
             } else {
               event.returnValue = {
                 err: true,
-                msj: 'Error:No se encuentra el Estudiante con Cedula' + arg.ci
+                msj: 'Error:No se encuentra el Estudiante con Cedula ' + arg.ci
               }
             }
           }
