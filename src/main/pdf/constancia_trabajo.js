@@ -12,84 +12,84 @@ exports.generar = function (obj) {
 
   /* Imagen 1. */
   doc.image('static/img/head.jpeg', 0, 0, {width: 612})
-  .text('', 0, 0)
+    .text('', 0, 0)
 
   /* Imagen 2. */
   doc.image('static/img/logo.jpeg', 500, 100, {width: 90})
-  .text('', 0, 0)
+    .text('', 0, 0)
 
   /* Membrete */
   doc.fontSize(10)
-  .text('REPÚBLICA BOLIVARIANA DE VENEZUELA', 160, rowMembrete, {
-    align: 'center',
-    width: 300
-  })
-  .text('MINISTERIO DEL PODER POPULAR PARA LA EDUCACIÓN', 160, rowMembrete + 10, {
-    align: 'center',
-    width: 300
-  })
-  .text('E.B.N 1º DE MAYO II', 160, rowMembrete + 20, {
-    align: 'center',
-    width: 300
-  })
-  .text('SAN FELIX. EDO. BOLÍVAR', 160, rowMembrete + 30, {
-    align: 'center',
-    width: 300
-  })
-  .text('CÓDIGO: 006731011', 160, rowMembrete + 40, {
-    align: 'center',
-    width: 300
-  })
+    .text('REPÚBLICA BOLIVARIANA DE VENEZUELA', 160, rowMembrete, {
+      align: 'center',
+      width: 300
+    })
+    .text('MINISTERIO DEL PODER POPULAR PARA LA EDUCACIÓN', 160, rowMembrete + 10, {
+      align: 'center',
+      width: 300
+    })
+    .text('E.B.N 1º DE MAYO II', 160, rowMembrete + 20, {
+      align: 'center',
+      width: 300
+    })
+    .text('SAN FELIX. EDO. BOLÍVAR', 160, rowMembrete + 30, {
+      align: 'center',
+      width: 300
+    })
+    .text('CÓDIGO: 006731011', 160, rowMembrete + 40, {
+      align: 'center',
+      width: 300
+    })
 
   /* Título. */
   doc.fontSize(20)
-  .text('CONSTANCIA DE TRABAJO', 180, 250)
+    .text('CONSTANCIA DE TRABAJO', 180, 250)
 
   /* Cuerpo del documento. */
   doc.text('', 90, 300)
-  .font('Times-Roman', 13)
-  .moveDown()
-  .text(body, {
-    width: 440,
-    lineGap: 8,
-    align: 'justify',
-    indent: 30,
-    height: 300,
-    ellipsis: true
-  })
+    .font('Times-Roman', 13)
+    .moveDown()
+    .text(body, {
+      width: 440,
+      lineGap: 8,
+      align: 'justify',
+      indent: 30,
+      height: 300,
+      ellipsis: true
+    })
 
- /* Cuerpo del documento. */
+  /* Cuerpo del documento. */
   doc.text('', 90, 530)
-  .font('Times-Roman', 13)
-  .moveDown()
-  .text('Constancia que se expide de la parte interesada, el día ' + dateFormat(now, 'dd') + ', del mes ' + dateFormat(now, 'mm') + ' del año ' + dateFormat(now, 'yyyy'), {
-    width: 440,
-    align: 'justify',
-    height: 300,
-    ellipsis: true
-  })
+    .font('Times-Roman', 13)
+    .moveDown()
+    .text('Constancia que se expide de la parte interesada, el día ' + dateFormat(now, 'dd') + ', del mes ' + dateFormat(now, 'mm') + ' del año ' + dateFormat(now, 'yyyy'), {
+      width: 440,
+      align: 'justify',
+      height: 300,
+      ellipsis: true
+    })
 
   /* firma de la directora. */
   doc.text('_______________________', 240, rowfirma, {
     align: 'center',
     width: 150
   })
-  .text(obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido, 240, rowfirma + 15, {
-    align: 'center',
-    width: 150
-  })
-  .text('C.I ' + obj.director.cedula, 240, rowfirma + 30, {
-    align: 'center',
-    width: 150
-  })
-  .text('Tlf.' + obj.director.telefono, 240, rowfirma + 45, {
-    align: 'center',
-    width: 150
-  })
-  .text('DIRECTORA', 240, rowfirma + 60, {
-    align: 'center',
-    width: 150
-  })
+    .text(obj.director.profesion + '. ' + obj.director.nombre + ' ' + obj.director.apellido, 240, rowfirma + 15, {
+      align: 'center',
+      width: 150
+    })
+    .text('C.I ' + obj.director.cedula, 240, rowfirma + 30, {
+      align: 'center',
+      width: 150
+    })
+    .text('Tlf.' + obj.director.telefono, 240, rowfirma + 45, {
+      align: 'center',
+      width: 150
+    })
+    .text('DIRECTORA', 240, rowfirma + 60, {
+      align: 'center',
+      width: 150
+    })
 
   /* Finalizar documento. */
   doc.end()

@@ -21,8 +21,8 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
-? `http://localhost:9080`
-: `file://${__dirname}/index.html`
+  ? `http://localhost:9080`
+  : `file://${__dirname}/index.html`
 
 function createWindow () {
   /**
@@ -463,91 +463,91 @@ ipcMain.on('constancia_sexto_grado', (event, arg) => {
     else {
       if (docT) {
         Estudiante
-        .findOne({ cedula: arg.ci }).populate('info').populate('matricula', '_id anio').exec((err, doc) => {
-          if (err) {
-            event.returnValue = {
-              err: true,
-              msj: 'Error:Conección con la BD' + arg.ci
-            }
-          } else {
-            if (doc) {
-              if (doc.matricula !== null) {
-                if (doc.matricula.anio === 6) {
-                  Persona.populate(docT, {path: 'responsable.info', select: 'nombre apellido'}, (errI, docI) => {
-                    if (docI.responsable !== null) {
-                      var docPdf = {
-                        director: {
-                          profesion: docI.responsable.profesion,
-                          nombre: docI.responsable.info.nombre,
-                          apellido: docI.responsable.info.apellido
-                        },
-                        cod_estadistico: arg.cod,
-                        cod_dea: docI.codigoDea,
-                        estudiante: {
-                          info: {
-                            apellidos: doc.info.apellido,
-                            nombres: doc.info.nombre,
-                            edad: doc.info.edad,
-                            cedula: doc.info.cedula,
-                            direccion: doc.info.direccion
+          .findOne({ cedula: arg.ci }).populate('info').populate('matricula', '_id anio').exec((err, doc) => {
+            if (err) {
+              event.returnValue = {
+                err: true,
+                msj: 'Error:Conección con la BD' + arg.ci
+              }
+            } else {
+              if (doc) {
+                if (doc.matricula !== null) {
+                  if (doc.matricula.anio === 6) {
+                    Persona.populate(docT, {path: 'responsable.info', select: 'nombre apellido'}, (errI, docI) => {
+                      if (docI.responsable !== null) {
+                        var docPdf = {
+                          director: {
+                            profesion: docI.responsable.profesion,
+                            nombre: docI.responsable.info.nombre,
+                            apellido: docI.responsable.info.apellido
                           },
-                          fechaNacimiento: new Date(doc.fechaNacimiento).toLocaleDateString(),
-                          nota: arg.nota
-                        },
-                        periodo: arg.periodo
-                      }
-                      var constanciaSextoGrado = require('./pdf/constancia_sexto_grado')
-                      constanciaSextoGrado.generar(docPdf)
-                      Matricula.findByIdAndUpdate(doc.matricula._id, { $pull: {estudiantes: doc._id} }, (errM, docMatricula) => {
-                        if (errM) {
-                          event.returnValue = {
-                            err: true,
-                            msj: 'Error:No se encuentra la matricula del estudiante'
-                          }
-                        } else {
-                          doc.matricula = null
-                          doc.save((errSE) => {
-                            if (errSE) {
-                              event.returnValue = {
-                                err: true,
-                                msj: 'Error:El estudiante no se elimino de su matricula'
-                              }
-                            } else {
-                              event.returnValue = {
-                                err: false,
-                                msj: 'Documento generado.'
-                              }
-                            }
-                          })
+                          cod_estadistico: arg.cod,
+                          cod_dea: docI.codigoDea,
+                          estudiante: {
+                            info: {
+                              apellidos: doc.info.apellido,
+                              nombres: doc.info.nombre,
+                              edad: doc.info.edad,
+                              cedula: doc.info.cedula,
+                              direccion: doc.info.direccion
+                            },
+                            fechaNacimiento: new Date(doc.fechaNacimiento).toLocaleDateString(),
+                            nota: arg.nota
+                          },
+                          periodo: arg.periodo
                         }
-                      })
-                    } else {
-                      event.returnValue = {
-                        err: true,
-                        msj: 'Error:El director no esta registrado en el sistema, por favor agregelo'
+                        var constanciaSextoGrado = require('./pdf/constancia_sexto_grado')
+                        constanciaSextoGrado.generar(docPdf)
+                        Matricula.findByIdAndUpdate(doc.matricula._id, { $pull: {estudiantes: doc._id} }, (errM, docMatricula) => {
+                          if (errM) {
+                            event.returnValue = {
+                              err: true,
+                              msj: 'Error:No se encuentra la matricula del estudiante'
+                            }
+                          } else {
+                            doc.matricula = null
+                            doc.save((errSE) => {
+                              if (errSE) {
+                                event.returnValue = {
+                                  err: true,
+                                  msj: 'Error:El estudiante no se elimino de su matricula'
+                                }
+                              } else {
+                                event.returnValue = {
+                                  err: false,
+                                  msj: 'Documento generado.'
+                                }
+                              }
+                            })
+                          }
+                        })
+                      } else {
+                        event.returnValue = {
+                          err: true,
+                          msj: 'Error:El director no esta registrado en el sistema, por favor agregelo'
+                        }
                       }
+                    })
+                  } else {
+                    event.returnValue = {
+                      err: true,
+                      msj: 'Error:Este estudiante no esta en 6 grado para graduarse.'
                     }
-                  })
+                  }
                 } else {
                   event.returnValue = {
                     err: true,
-                    msj: 'Error:Este estudiante no esta en 6 grado para graduarse.'
+                    msj: 'Error:Estudiante no matriculado (se retiro o se graduo).'
                   }
                 }
               } else {
                 event.returnValue = {
                   err: true,
-                  msj: 'Error:Estudiante no matriculado (se retiro o se graduo).'
+                  msj: 'Error:No se encuentra el Estudiante con Cedula' + arg.ci
                 }
               }
-            } else {
-              event.returnValue = {
-                err: true,
-                msj: 'Error:No se encuentra el Estudiante con Cedula' + arg.ci
-              }
             }
-          }
-        })
+          })
       } else {
         event.returnValue = {
           err: true,
@@ -564,68 +564,68 @@ ipcMain.on('constancia_estudio', (event, arg) => {
     else {
       if (docT) {
         Estudiante
-        .findOne({ cedula: arg.ci }).populate('info').populate('matricula', '_id anio seccion').exec((err, doc) => {
-          if (err) {
-            event.returnValue = {
-              err: true,
-              msj: 'Error:Conección con la BD' + arg.ci
-            }
-          } else {
-            if (doc) {
-              if (doc.matricula !== null) {
-                Persona.populate(docT, {path: 'responsable.info', select: 'nombre apellido'}, (errI, docI) => {
-                  if (docI) {
-                    var docPdf = {
-                      director: {
-                        profesion: docI.responsable.profesion,
-                        nombre: docI.responsable.info.nombre,
-                        apellido: docI.responsable.info.apellido
-                      },
-                      cod_estadistico: arg.cod,
-                      cod_dea: docI.codigoDea,
-                      estudiante: {
-                        info: {
-                          apellidos: doc.info.apellido,
-                          nombres: doc.info.nombre,
-                          edad: doc.info.edad,
-                          cedula: doc.info.cedula,
-                          direccion: doc.info.direccion
+          .findOne({ cedula: arg.ci }).populate('info').populate('matricula', '_id anio seccion').exec((err, doc) => {
+            if (err) {
+              event.returnValue = {
+                err: true,
+                msj: 'Error:Conección con la BD' + arg.ci
+              }
+            } else {
+              if (doc) {
+                if (doc.matricula !== null) {
+                  Persona.populate(docT, {path: 'responsable.info', select: 'nombre apellido'}, (errI, docI) => {
+                    if (docI) {
+                      var docPdf = {
+                        director: {
+                          profesion: docI.responsable.profesion,
+                          nombre: docI.responsable.info.nombre,
+                          apellido: docI.responsable.info.apellido
                         },
-                        anio: doc.matricula.anio,
-                        seccion: doc.matricula.seccion,
-                        representante: doc.representante,
-                        fechaNacimiento: new Date(doc.fechaNacimiento).toLocaleDateString(),
-                        nota: arg.nota
-                      },
-                      anioEscolar: arg.anio
+                        cod_estadistico: arg.cod,
+                        cod_dea: docI.codigoDea,
+                        estudiante: {
+                          info: {
+                            apellidos: doc.info.apellido,
+                            nombres: doc.info.nombre,
+                            edad: doc.info.edad,
+                            cedula: doc.info.cedula,
+                            direccion: doc.info.direccion
+                          },
+                          anio: doc.matricula.anio,
+                          seccion: doc.matricula.seccion,
+                          representante: doc.representante,
+                          fechaNacimiento: new Date(doc.fechaNacimiento).toLocaleDateString(),
+                          nota: arg.nota
+                        },
+                        anioEscolar: arg.anio
+                      }
+                      var constanciaEstudio = require('./pdf/constancia_estudio')
+                      constanciaEstudio.generar(docPdf)
+                      event.returnValue = {
+                        err: false,
+                        msj: 'Generado.'
+                      }
+                    } else {
+                      event.returnValue = {
+                        err: true,
+                        msj: 'Error:El director no esta registrado en el sistema, por favor agregelo'
+                      }
                     }
-                    var constanciaEstudio = require('./pdf/constancia_estudio')
-                    constanciaEstudio.generar(docPdf)
-                    event.returnValue = {
-                      err: false,
-                      msj: 'Generado.'
-                    }
-                  } else {
-                    event.returnValue = {
-                      err: true,
-                      msj: 'Error:El director no esta registrado en el sistema, por favor agregelo'
-                    }
+                  })
+                } else {
+                  event.returnValue = {
+                    err: true,
+                    msj: 'Error:Estudiante no matriculado (se retiro o se graduo).'
                   }
-                })
+                }
               } else {
                 event.returnValue = {
                   err: true,
-                  msj: 'Error:Estudiante no matriculado (se retiro o se graduo).'
+                  msj: 'Error:No se encuentra el Estudiante con Cedula ' + arg.ci
                 }
               }
-            } else {
-              event.returnValue = {
-                err: true,
-                msj: 'Error:No se encuentra el Estudiante con Cedula ' + arg.ci
-              }
             }
-          }
-        })
+          })
       } else {
         event.returnValue = {
           err: true,
@@ -704,64 +704,64 @@ ipcMain.on('Constancia_trabajo', (event, arg) => {
             break
           case 2:
             Docente
-            .findOne({ codigo: arg.data.cod }).populate('info').exec(function (err, doc) {
-              if (err) {
-                event.returnValue = {
-                  err: true,
-                  msj: 'Error al Conectarse con la BD' + arg.data.ci
-                }
-              } else {
-                if (doc) {
-                  if (docT.responsable !== null) {
-                    Persona.populate(docT, {path: 'responsable.info', select: 'cedula nombre apellido'}, (errP, docI) => {
-                      var docPdf = {
-                        director: {
-                          cedula: docI.responsable.info.cedula,
-                          profesion: docI.responsable.profesion,
-                          nombre: docI.responsable.info.nombre,
-                          apellido: docI.responsable.info.apellido,
-                          dependencia: docI.nombre,
-                          telefono: docI.responsable.telefono
-                        },
-                        cod_dea: docI.codigoDea,
-                        personal: {
-                          info: {
-                            apellido: doc.info.apellido,
-                            nombre: doc.info.nombre,
-                            edad: doc.info.edad,
-                            cedula: doc.info.cedula,
-                            direccion: doc.info.direccion
-                          },
-                          dependencia: docI.nombre,
-                          cargo: doc.cargo,
-                          fechaIngreso: new Date(doc.fechaIngreso).toLocaleDateString(),
-                          cod_cargo: doc.codigo,
-                          turno: arg.data.turno,
-                          sueldo: arg.data.sueldo
-                        }
-                      }
-                      var constanciaTrabajo = require('./pdf/constancia_trabajo')
-                      constanciaTrabajo.generar(docPdf)
-
-                      event.returnValue = {
-                        err: false,
-                        msj: 'Se genero el Archivo en su Directorio de Documentos'
-                      }
-                    })
-                  } else {
-                    event.returnValue = {
-                      err: false,
-                      msj: 'El director no esta registrado en el sistema, por favor agregelo'
-                    }
-                  }
-                } else {
+              .findOne({ codigo: arg.data.cod }).populate('info').exec(function (err, doc) {
+                if (err) {
                   event.returnValue = {
                     err: true,
-                    msj: 'No se encuentra el Docente o Personal con Codigo ' + arg.data.cod
+                    msj: 'Error al Conectarse con la BD' + arg.data.ci
+                  }
+                } else {
+                  if (doc) {
+                    if (docT.responsable !== null) {
+                      Persona.populate(docT, {path: 'responsable.info', select: 'cedula nombre apellido'}, (errP, docI) => {
+                        var docPdf = {
+                          director: {
+                            cedula: docI.responsable.info.cedula,
+                            profesion: docI.responsable.profesion,
+                            nombre: docI.responsable.info.nombre,
+                            apellido: docI.responsable.info.apellido,
+                            dependencia: docI.nombre,
+                            telefono: docI.responsable.telefono
+                          },
+                          cod_dea: docI.codigoDea,
+                          personal: {
+                            info: {
+                              apellido: doc.info.apellido,
+                              nombre: doc.info.nombre,
+                              edad: doc.info.edad,
+                              cedula: doc.info.cedula,
+                              direccion: doc.info.direccion
+                            },
+                            dependencia: docI.nombre,
+                            cargo: doc.cargo,
+                            fechaIngreso: new Date(doc.fechaIngreso).toLocaleDateString(),
+                            cod_cargo: doc.codigo,
+                            turno: arg.data.turno,
+                            sueldo: arg.data.sueldo
+                          }
+                        }
+                        var constanciaTrabajo = require('./pdf/constancia_trabajo')
+                        constanciaTrabajo.generar(docPdf)
+
+                        event.returnValue = {
+                          err: false,
+                          msj: 'Se genero el Archivo en su Directorio de Documentos'
+                        }
+                      })
+                    } else {
+                      event.returnValue = {
+                        err: false,
+                        msj: 'El director no esta registrado en el sistema, por favor agregelo'
+                      }
+                    }
+                  } else {
+                    event.returnValue = {
+                      err: true,
+                      msj: 'No se encuentra el Docente o Personal con Codigo ' + arg.data.cod
+                    }
                   }
                 }
-              }
-            })
+              })
             break
           default:
             event.returnValue = {
@@ -813,22 +813,22 @@ ipcMain.on('Iniciar', (event, arg) => {
       throw err
     } else {
       Institucion
-      .where('codigoDependencia').count(function (err, len) {
-        if (err) throw (err)
-        else {
-          if (len) {
-            event.returnValue = {
-              err: false,
-              msj: 'Data Cargada'
-            }
-          } else {
-            event.returnValue = {
-              err: true,
-              msj: 'Iniciar el Sistema.'
+        .where('codigoDependencia').count(function (err, len) {
+          if (err) throw (err)
+          else {
+            if (len) {
+              event.returnValue = {
+                err: false,
+                msj: 'Data Cargada'
+              }
+            } else {
+              event.returnValue = {
+                err: true,
+                msj: 'Iniciar el Sistema.'
+              }
             }
           }
-        }
-      })
+        })
     }
   })
 })

@@ -224,12 +224,12 @@ export default {
           sortable: false,
           value: 'cedula'
         },
-         { text: 'Nombre', value: 'nombre' },
-         { text: 'Apellido', value: 'apellido' },
-         { text: 'Edad', value: 'edad' },
-         { text: 'Dirección', value: 'direccion' },
-         { text: 'Cursa', value: 'matricula' },
-         { text: 'Representante', value: 'representante' }
+        { text: 'Nombre', value: 'nombre' },
+        { text: 'Apellido', value: 'apellido' },
+        { text: 'Edad', value: 'edad' },
+        { text: 'Dirección', value: 'direccion' },
+        { text: 'Cursa', value: 'matricula' },
+        { text: 'Representante', value: 'representante' }
       ],
       items: [],
       seleccionados: [],

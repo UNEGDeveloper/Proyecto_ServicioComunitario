@@ -67,10 +67,10 @@ export default {
           sortable: false,
           value: 'ci'
         },
-         { text: 'Nombre', value: 'name' },
-         { text: 'Apellido', value: 'lastname' },
-         { text: 'Cargo', value: 'cargo' },
-         { text: 'Dependencia', value: 'depend' }
+        { text: 'Nombre', value: 'name' },
+        { text: 'Apellido', value: 'lastname' },
+        { text: 'Cargo', value: 'cargo' },
+        { text: 'Dependencia', value: 'depend' }
       ],
       items: [],
       seleccionados: [],

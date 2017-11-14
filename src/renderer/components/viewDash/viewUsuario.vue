@@ -72,7 +72,7 @@ export default {
           sortable: false,
           value: 'name'
         },
-         { text: 'Creado', value: 'c' }
+        { text: 'Creado', value: 'c' }
       ],
       items: [],
       seleccionados: [],
