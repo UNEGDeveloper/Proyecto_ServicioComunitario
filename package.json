@@ -56,7 +56,7 @@
     }
   },
   "dependencies": {
-    "axios": "0.17.1",
+    "axios": "0.21.1",
     "dateformat": "3.0.2",
     "iconv-lite": "0.4.19",
     "material-design-icons": "3.0.1",
